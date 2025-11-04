@@ -1,10 +1,25 @@
 export async function handler(event) {
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin":
+          "https://trucare-dermoesthetic.github.io",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+      },
+      body: "",
+    };
+  }
+
+  console.log("Event Body:", event.body);
+
   const { to, subject, text } = JSON.parse(event.body);
 
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
-      "accept": "application/json",
+      accept: "application/json",
       "api-key": process.env.BREVO_API_KEY,
       "content-type": "application/json",
     },
