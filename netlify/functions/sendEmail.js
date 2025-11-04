@@ -18,6 +18,13 @@ export async function handler(event) {
 
   console.log("BREVO_API_KEY exists:", !!process.env.BREVO_API_KEY);
 
+  await db.collection("emails").add({
+    to,
+    subject,
+    text,
+    sentAt: new Date(),
+  });
+
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
