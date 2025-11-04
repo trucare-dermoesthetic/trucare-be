@@ -26,7 +26,7 @@ export async function handler(event) {
       "content-type": "application/json",
     },
     body: JSON.stringify({
-      sender: { name: "TruCare", email: "no-reply@tudominio.com" },
+      sender: { name: "TruCare", email: "trucare.carla@gmail.com" },
       to: [{ email: to }],
       subject,
       textContent: text,
