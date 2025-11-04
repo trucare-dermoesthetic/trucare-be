@@ -16,7 +16,7 @@ export async function handler(event) {
 
   const { to, subject, text } = JSON.parse(event.body);
 
-  console.log("BREVO_API_KEY exists:", !!process.env.BREVO_API_KEY);
+  console.log("BREVO_API_KEY exists:", process.env.BREVO_API_KEY);
 
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
