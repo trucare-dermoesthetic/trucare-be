@@ -100,7 +100,8 @@ export async function handler(event) {
           Estoy encantada de acompañarte en este camino.
 
           Un abrazo,
-        TruCare
+          Carla
+          TruCare
         `,
       }),
     }),

@@ -59,6 +59,7 @@ export async function handler(event) {
           Estoy aquí para ayudarte en lo que necesites.
 
           Un abrazo,
+          Carla
           TruCare
         `,
       }),
