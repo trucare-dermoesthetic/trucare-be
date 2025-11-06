@@ -20,7 +20,7 @@ export async function handler(event) {
 
   const sendAt = new Date();
 
-  const { resTrucare, resUser } = await Promise.all([
+  const [resTrucare, resUser] = await Promise.all([
     fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
@@ -65,7 +65,7 @@ export async function handler(event) {
     }),
   ]);
 
-  console.log("responses:", resUser.ok, resTrucare.ok);
+  console.log("responses:", resTrucare.ok, resUser.ok );
 
   // const data = await resTrucare.json();
   // JSON.stringify(data)

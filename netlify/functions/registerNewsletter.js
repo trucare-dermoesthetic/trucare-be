@@ -53,7 +53,7 @@ export async function handler(event) {
   //     }),
   //   });
 
-  const { dbResponse, trucareResponse, emailResponse } = await Promise.all([
+  const [dbResponse, trucareResponse, emailResponse] = await Promise.all([
     db.collection("registerNewsletter").add({
       name,
       email,
@@ -106,7 +106,7 @@ export async function handler(event) {
     }),
   ]);
 
-  console.log("response", dbResponse, emailResponse.ok);
+  console.log("response", dbResponse, trucareResponse.ok, emailResponse.ok);
 
   // const data = await resTrucare.json();
   // JSON.stringify(data)
