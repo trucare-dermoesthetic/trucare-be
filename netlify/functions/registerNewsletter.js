@@ -30,7 +30,7 @@ export async function handler(event) {
   });
 
   // sendEmail to user
-  await fetch("https://api.brevo.com/v3/smtp/email", {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
       accept: "application/json",
@@ -53,10 +53,12 @@ export async function handler(event) {
     }),
   });
 
+  console.log("response", res);
+
   // const data = await resTrucare.json();
   // JSON.stringify(data)
   return {
-    statusCode: resTrucare.ok ? 200 : 400,
+    statusCode: res.ok ? 200 : 400,
     body: "ok",
   };
 }

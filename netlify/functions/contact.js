@@ -20,7 +20,6 @@ export async function handler(event) {
 
   const sendAt = new Date();
 
-
   // sendEmail to TruCare
   const resTrucare = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -44,7 +43,7 @@ export async function handler(event) {
   });
 
   // sendEmail to user
-  await fetch("https://api.brevo.com/v3/smtp/email", {
+  const resUser = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
       accept: "application/json",
@@ -66,6 +65,8 @@ export async function handler(event) {
         `,
     }),
   });
+
+  console.log('responses:', resUser, resTrucare);
 
   // const data = await resTrucare.json();
   // JSON.stringify(data)
