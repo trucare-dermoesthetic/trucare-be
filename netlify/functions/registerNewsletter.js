@@ -53,14 +53,14 @@ export async function handler(event) {
   //     }),
   //   });
 
-  const { dbResponse, trucareResponse, emailResponse  } = await Promise.all([
-    await db.collection("registerNewsletter").add({
+  const { dbResponse, trucareResponse, emailResponse } = await Promise.all([
+    db.collection("registerNewsletter").add({
       name,
       email,
       phone,
       sentAt: sendAt,
     }),
-     await fetch("https://api.brevo.com/v3/smtp/email", {
+    fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
         accept: "application/json",
@@ -82,7 +82,7 @@ export async function handler(event) {
         `,
       }),
     }),
-    await fetch("https://api.brevo.com/v3/smtp/email", {
+    fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
         accept: "application/json",
