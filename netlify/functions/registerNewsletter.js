@@ -22,26 +22,78 @@ export async function handler(event) {
 
   const sendAt = new Date();
 
-  await db.collection("registerNewsletter").add({
-    name,
-    email,
-    phone,
-    sentAt: sendAt,
-  });
+  //   await db.collection("registerNewsletter").add({
+  //     name,
+  //     email,
+  //     phone,
+  //     sentAt: sendAt,
+  //   });
 
-  // sendEmail to user
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      "api-key": process.env.BREVO_API_KEY,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      sender: { name: "TruCare", email: "trucare.carla@gmail.com" },
-      to: [{ email: email }],
-      subject: "¡Bienvenida/o a TruCare! 💛",
-      textContent: `Hola ${name},
+  //   // sendEmail to user
+  //   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+  //     method: "POST",
+  //     headers: {
+  //       accept: "application/json",
+  //       "api-key": process.env.BREVO_API_KEY,
+  //       "content-type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       sender: { name: "TruCare", email: "trucare.carla@gmail.com" },
+  //       to: [{ email: email }],
+  //       subject: "¡Bienvenida/o a TruCare! 💛",
+  //       textContent: `Hola ${name},
+
+  //           Gracias por unirte a nuestra lista de promociones. A partir de ahora recibirás ofertas exclusivas, ventajas especiales y novedades pensadas para cuidar tu piel y tu bienestar.
+
+  //           Estoy encantada de acompañarte en este camino.
+
+  //           Un abrazo,
+  //         TruCare
+  //         `,
+  //     }),
+  //   });
+
+  const { dbResponse, trucareResponse, emailResponse  } = await Promise.all([
+    await db.collection("registerNewsletter").add({
+      name,
+      email,
+      phone,
+      sentAt: sendAt,
+    }),
+     await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "api-key": process.env.BREVO_API_KEY,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        sender: { name: "TruCare", email: "trucare.carla@gmail.com" },
+        to: [{ email: "trucare.carla@gmail.com" }],
+        subject: "Nuevo suscriptor a la newsletter 💛",
+        textContent: `Has recibido un nuevo suscriptor a la newsletter:
+        Nombre: ${name}
+        Email: ${email}
+        Teléfono: ${phone}
+        Fecha: ${sendAt.toLocaleString()}.
+
+
+        Puedes descargar la lista completa aqui: https://oscartrujillo.retool.com/apps/e9c56ca6-b9a0-11f0-99bf-079f41019ecf/Untitled/page1
+        `,
+      }),
+    }),
+    await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "api-key": process.env.BREVO_API_KEY,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        sender: { name: "TruCare", email: "trucare.carla@gmail.com" },
+        to: [{ email: email }],
+        subject: "¡Bienvenida/o a TruCare! 💛",
+        textContent: `Hola ${name},
 
           Gracias por unirte a nuestra lista de promociones. A partir de ahora recibirás ofertas exclusivas, ventajas especiales y novedades pensadas para cuidar tu piel y tu bienestar.
 
@@ -50,15 +102,16 @@ export async function handler(event) {
           Un abrazo,
         TruCare
         `,
+      }),
     }),
-  });
+  ]);
 
-  console.log("response", res);
+  console.log("response", dbResponse, emailResponse.ok);
 
   // const data = await resTrucare.json();
   // JSON.stringify(data)
   return {
-    statusCode: res.ok ? 200 : 400,
+    statusCode: emailResponse.ok ? 200 : 400,
     body: "ok",
   };
 }

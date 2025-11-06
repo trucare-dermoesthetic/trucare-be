@@ -20,53 +20,52 @@ export async function handler(event) {
 
   const sendAt = new Date();
 
-  // sendEmail to TruCare
-  const resTrucare = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      "api-key": process.env.BREVO_API_KEY,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      sender: { name: "TruCare", email: "trucare.carla@gmail.com" },
-      to: [{ email: "trucare.carla@gmail.com" }],
-      subject: "Nuevo mensaje desde el formulario de contacto 💛",
-      textContent: `Has recibido un nuevo mensaje a través de la web:
+  const { resTrucare, resUser } = await Promise.all([
+    fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "api-key": process.env.BREVO_API_KEY,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        sender: { name: "TruCare", email: "trucare.carla@gmail.com" },
+        to: [{ email: "trucare.carla@gmail.com" }],
+        subject: "Nuevo mensaje desde el formulario de contacto 💛",
+        textContent: `Has recibido un nuevo mensaje a través de la web:
         Nombre: ${name}
         Email: ${email}
         Teléfono: ${phone}
         Mensaje: ${message}
         Fecha: ${sendAt.toLocaleString()}
         `,
+      }),
     }),
-  });
+    fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "api-key": process.env.BREVO_API_KEY,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        sender: { name: "TruCare", email: "trucare.carla@gmail.com" },
+        to: [{ email: email }],
+        subject: "Hemos recibido tu mensaje 💛",
+        textContent: ` Hola ${name},
 
-  // sendEmail to user
-  const resUser = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      "api-key": process.env.BREVO_API_KEY,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      sender: { name: "TruCare", email: "trucare.carla@gmail.com" },
-      to: [{ email: email }],
-      subject: "Hemos recibido tu mensaje 💛",
-      textContent: ` Hola ${name},
+          Gracias por ponerte en contacto conmigo. He recibido tu mensaje y te responderé lo antes posible.
+          Mientras tanto, gracias por confiar en TruCare.
+          Estoy aquí para ayudarte en lo que necesites.
 
- Gracias por ponerte en contacto conmigo. He recibido tu mensaje y te responderé lo antes posible.
- Mientras tanto, gracias por confiar en TruCare.
- Estoy aquí para ayudarte en lo que necesites.
-
- Un abrazo,
- TruCare
+          Un abrazo,
+          TruCare
         `,
+      }),
     }),
-  });
+  ]);
 
-  console.log('responses:', resUser, resTrucare);
+  console.log("responses:", resUser.ok, resTrucare.ok);
 
   // const data = await resTrucare.json();
   // JSON.stringify(data)
